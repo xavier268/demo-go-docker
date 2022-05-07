@@ -7,7 +7,7 @@
 #   docker build -t myimage .
 #   docker run myimage
 #
-#   (c) Xavier Gandillot 2022
+#   (c) xavier268@github.com
 #   2022-05-07 : initial version
 #===============================================
 
