@@ -9,6 +9,7 @@
 #
 #   (c) xavier268@github.com
 #   2022-05-07 : initial version
+#   2022-11-10 : add fully qualified image names
 #===============================================
 
 
