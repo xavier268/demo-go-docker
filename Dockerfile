@@ -13,7 +13,8 @@
 
 
 # First, we prepare an image to compile the program ...
-FROM golang:alpine as COMPILER
+# Highly recommanded to use fully qualified image names.
+FROM docker.io/golang:alpine as COMPILER 
 
 WORKDIR /build
 RUN apk update && apk upgrade
