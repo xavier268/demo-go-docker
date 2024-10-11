@@ -33,9 +33,9 @@ FROM scratch
 
 COPY --from=COMPILER /build/out  /out
 
-# You may want to copy other files, if any is needed for runtime ..
+# You may want to copy other files, if any is needed at runtime ..
 # COPY ....
-# NB: you need this form of CMD to be sure not to call sh, that is not available here...
+# NB: you need this form of CMD to be sure not to call sh, that is not available here ...
 CMD ["/out"]
 
 

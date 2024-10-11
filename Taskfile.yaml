@@ -1,0 +1,60 @@
+version: '3'
+
+env:
+  GOOS: # windows or linux ?
+    sh: go env GOOS
+  VERSION:
+    sh: cat version.txt
+  BROWSER: # browser to open  page
+    sh: 'if [ "$(go env GOOS)" = "windows" ]; then echo "Powershell Start-Process "; else echo "xdg-open"; fi'
+
+
+tasks:
+
+  default:
+    desc: default task will display task menu (and update task itself)
+    cmds:
+      - go install github.com/go-task/task/v3/cmd/task@latest
+      - echo "default task will display task menu"
+      - task --list-all
+
+  godoc: 
+    desc: launch godoc viewer and open browser page on windows
+    cmds:     
+      - go install golang.org/x/tools/cmd/godoc@latest
+      - godoc -http=:6060 &     
+      - $( {{.BROWSER }} "http://localhost:6060" )
+
+  version: 
+    desc: display versionning information
+    silent: true
+    cmds:
+      - task --version
+      - echo "Demo version :" $VERSION
+      - echo "shell :" $0 $SHELL
+      - go version
+      - podman --version
+      - ssh -V
+      - git --version
+
+  build-image:
+    desc: build docker image
+    cmds:
+      - podman build -t demo:$VERSION .
+      - podman image tag demo:$VERSION demo:latest
+      - podman images
+
+  run-image:
+    desc: run image for given version
+    deps: [build-image]
+    silent: true
+    cmds:
+      - podman run --rm -it demo:$VERSION
+
+  clear-all-images:
+    desc: clear all images
+    cmds:
+      - podman rmi -f $(podman images -q)
+      - podman images -a
+
+  

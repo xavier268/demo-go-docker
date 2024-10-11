@@ -3,28 +3,29 @@ package main
 import (
 	"fmt"
 	"os"
+	"regexp"
 
-	// To ensure importing external libs works, we will use my revregex lib as a demo ...")
-	"github.com/xavier268/revregex"
+	"github.com/xavier268/rgen"
+	// To ensure importing external libs works, we will use my rgen lib as a demo ...")
 )
 
 func main() {
 	fmt.Println("This message is sent from the demo program")
 
-	pattern := "a(b|c)+a?"
-	generator, err := revregex.NewGen(pattern)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	pattern := "a(b|c)+a?c"
+	maxlen := 4
+
+	for s := range rgen.All(pattern, maxlen) {
+		fmt.Print(s, " ")
+		if len(s) > maxlen {
+			fmt.Println("Too long !")
+			os.Exit(2)
+		}
+		if b, err := regexp.Match(pattern, []byte(s)); err != nil || !b {
+			fmt.Println("KO", err)
+			os.Exit(3)
+		}
+		fmt.Println("OK")
 	}
-	chooser := revregex.NewRandChooser()
-	result := generator.Next(chooser)
-	fmt.Println("Generated : ", result)
-	err = generator.Verify(result)
-	if err != nil {
-		fmt.Println("Verification failed ", err)
-		os.Exit(2)
-	} else {
-		fmt.Println("Demo is sucessful !")
-	}
+	fmt.Println("Demo successful")
 }
