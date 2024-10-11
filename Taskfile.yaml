@@ -5,6 +5,10 @@ env:
     sh: go env GOOS
   VERSION:
     sh: cat version.txt
+  USER: # user on remote system
+    "xavier"
+  TARGET: # remote system
+    "192.168.1.9"
   BROWSER: # browser to open  page
     sh: 'if [ "$(go env GOOS)" = "windows" ]; then echo "Powershell Start-Process "; else echo "xdg-open"; fi'
 
@@ -56,5 +60,12 @@ tasks:
     cmds:
       - podman rmi -f $(podman images -q)
       - podman images -a
+
+  transfer-image:
+    desc: "syntax is : task transfer-image -- user@remotehost"
+    deps: [build-image]
+    cmds:
+      - podman save demo:latest | ssh {{.CLI_ARGS}} podman load
+      - ssh {{.CLI_ARGS}} podman images
 
   
